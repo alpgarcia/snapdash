@@ -33,9 +33,12 @@ Get a file with a dashboard snapshot.
 ```
 snapdash &lt;url> &lt;image_name> [--start-date &lt;date> --end-date &lt;date>]
 ```
-* **url**: dashboard URL.
-* **image_name**: desired output image name.
-* **start_date**: 
+* **`url`**: dashboard URL.
+* **`image_name`**: desired output image name.
+* **`--start-date`**: date to retrieve data from. If not specified, dashboard 
+    default time frame will be used.
+* **`--end-date`**: date to retrieve data to. Defaults to now and has no effect if
+    **`--start-date`** is not specified.
 
 #### Requirements
 * Access to Kibana non-editable version.
@@ -60,6 +63,13 @@ Get a file with a specified visualization from a Dashboard.
 ```
 snapdash &lt;url> &lt;image_name> --viz &lt;viz_id> [--start-date &lt;date> --end-date &lt;date>]
 ```
+* **`url`**: dashboard URL.
+* **`image_name`**: desired output image name.
+* **`--viz`**: identifier of the visualization we want to get a snapshot from. 
+* **`--start-date`**: date to retrieve data from. If not specified, dashboard 
+    default time frame will be used.
+* **`--end-date`**: date to retrieve data to. Defaults to now and has no effect if
+    **`--start-date`** is not specified.
 
 #### Requirements
 * Access to Kibana non-editable version.
