@@ -75,5 +75,6 @@ snapdash &lt;url> &lt;image_name> --viz &lt;viz_id> [--start-date &lt;date> --en
 * Access to Kibana non-editable version.
 
 ## References
+  * [kibana2pdf](https://gitlab.com/jsmanrique/kibana2pdf)
   * [Running Selenium wiyh headless Chrome](https://intoli.com/blog/running-selenium-with-headless-chrome/)
   * [How to take full-page screenshots with Selenium and Google Chrome in Ruby](https://gist.github.com/elcamino/5f562564ecd2fb86f559)
