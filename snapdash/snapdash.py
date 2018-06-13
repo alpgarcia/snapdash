@@ -31,11 +31,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 
-def load_dashboard(driver, url, img_name, viz_id=None, date_range=None):
+def load_dashboard(driver, url, img_name, viz_id=None, crop_viz=False, date_range=None):
 
     if date_range:
         url += f"?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'{date_range[0]}'," +\
-            "mode:absolute,to:'{date_range[1]}'))"
+            f"mode:absolute,to:'{date_range[1]}'))"
 
     print(url)
     driver.get(url)
@@ -57,30 +57,41 @@ def load_dashboard(driver, url, img_name, viz_id=None, date_range=None):
     driver.set_window_size(win_width + 100, win_height + 100)
 
     # save a screenshot of the whole page to disk
-    driver.save_screenshot("full-window_" + img_name)
+    driver.save_screenshot(f"{img_name}_full_window.png")
 
-    if viz_id:
-        # Crop image to get only the specified viz
-        element = driver.find_element_by_xpath(f"//dashboard-panel[.//div[@title='{viz_id}']]")
-    elif '/visualize/' in url:
-        # Crop image to get editor canvas only
-        element = driver.find_element_by_tag_name("visualize")
+    if crop_viz:
+        # Crop each individual viz
+        elements = driver.find_elements_by_xpath("//dashboard-panel")
+        for element in elements:
+            title = element.find_element_by_class_name("panel-title").get_attribute("title")
+            img_path = f"{img_name}-{title}.png"
+            capture(driver, element, img_path)
     else:
-        # Crop image to remove menus
-        element = driver.find_element_by_tag_name("dashboard-app")
+        if viz_id:
+            # Crop image to get only the specified viz
+            element = driver.find_element_by_xpath(f"//dashboard-panel[.//div[@title='{viz_id}']]")
+        elif '/visualize/' in url:
+            # Crop image to get editor canvas only
+            element = driver.find_element_by_tag_name("visualize")
+        else:
+            # Crop image to remove menus
+            element = driver.find_element_by_tag_name("dashboard-app")
 
+        img_path = f"{img_name}.png"
+        capture(driver, element, img_path)
+
+    print(driver.title)
+
+
+def capture(driver, element, img_name):
     x_pos = element.location["x"]
     y_pos = element.location["y"]
     width = element.size["width"]
     height = element.size["height"]
-
     png = driver.get_screenshot_as_png()
     img = Image.open(BytesIO(png))
-
     img = img.crop((x_pos, y_pos, x_pos + width, y_pos + height))
     img.save(img_name)
-
-    print(driver.title)
 
 
 def main():
@@ -88,7 +99,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("url")
     parser.add_argument("img_name")
-    parser.add_argument("-v", "--viz-id", dest="viz_id")
+    exc_group = parser.add_mutually_exclusive_group(required=False)
+    exc_group.add_argument("-v", "--viz-id", dest="viz_id")
+    exc_group.add_argument("-c", "--crop_viz", action='store_true', dest="crop_viz")
     parser.add_argument("-s", "--start-date", dest="start_date")
     parser.add_argument("-e", "--end-date", dest="end_date", default="now")
 
@@ -105,7 +118,7 @@ def main():
     driver = webdriver.Chrome(chrome_options=options)
 
     try:
-        load_dashboard(driver, args.url, args.img_name, args.viz_id, date_range)
+        load_dashboard(driver, args.url, args.img_name, args.viz_id, args.crop_viz, date_range)
 
     except Exception as ex:
         print(ex)

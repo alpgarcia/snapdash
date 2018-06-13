@@ -34,7 +34,7 @@ Get a file with a dashboard snapshot.
 snapdash &lt;url> &lt;image_name> [--start-date &lt;date> --end-date &lt;date>]
 ```
 * **`url`**: dashboard URL.
-* **`image_name`**: desired output image name.
+* **`image_name`**: desired output image name (path without file extension).
 * **`--start-date`**: date to retrieve data from. If not specified, dashboard 
     default time frame will be used.
 * **`--end-date`**: date to retrieve data to. Defaults to now and has no effect if
@@ -64,8 +64,25 @@ Get a file with a specified visualization from a Dashboard.
 snapdash &lt;url> &lt;image_name> --viz &lt;viz_id> [--start-date &lt;date> --end-date &lt;date>]
 ```
 * **`url`**: dashboard URL.
-* **`image_name`**: desired output image name.
+* **`image_name`**: desired output image name (path without file extension).
 * **`--viz`**: identifier of the visualization we want to get a snapshot from. 
+* **`--start-date`**: date to retrieve data from. If not specified, dashboard 
+    default time frame will be used.
+* **`--end-date`**: date to retrieve data to. Defaults to now and has no effect if
+    **`--start-date`** is not specified.
+
+#### Requirements
+* Access to Kibana non-editable version.
+
+### UC 4: All Visualizations from a Dashboard
+#### Description
+Get a file for each visualization in a Dashboard.
+```
+snapdash &lt;url> &lt;image_name> --crop-viz [--start-date &lt;date> --end-date &lt;date>]
+```
+* **`url`**: dashboard URL.
+* **`image_name`**: desired output image name (path without file extension).
+* **`--crop-viz`**: get separate snapshots for each and every viz in dashboard. 
 * **`--start-date`**: date to retrieve data from. If not specified, dashboard 
     default time frame will be used.
 * **`--end-date`**: date to retrieve data to. Defaults to now and has no effect if
